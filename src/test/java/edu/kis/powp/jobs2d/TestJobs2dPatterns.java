@@ -7,12 +7,15 @@ import java.util.logging.Logger;
 
 import edu.kis.legacy.drawer.panel.DefaultDrawerFrame;
 import edu.kis.legacy.drawer.panel.DrawPanelController;
+import edu.kis.legacy.drawer.shape.LineFactory;
 import edu.kis.powp.appbase.Application;
 import edu.kis.powp.jobs2d.drivers.adapter.DrawTheCorrectPattern;
+import edu.kis.powp.jobs2d.drivers.adapter.LineDrawerAdapter;
 import edu.kis.powp.jobs2d.events.SelectChangeVisibleOptionListener;
 import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
+import edu.kis.powp.jobs2d.magicpresets.FiguresJoe;
 
 public class TestJobs2dPatterns {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -23,10 +26,14 @@ public class TestJobs2dPatterns {
 	 * @param application Application context.
 	 */
 	private static void setupPresetTests(Application application) {
-		SelectTestFigureOptionListener selectTestFigureOptionListener = new SelectTestFigureOptionListener(
-				DriverFeature.getDriverManager());
-
-		application.addTest("Figure Joe 1", selectTestFigureOptionListener);
+        //Zadanie 3.2 - Figure Joe 1. Wcześniej był listener, lecz wyoknywał on na sztywno 1 test. Teraz dodajemy 2 testy, a listenera zastępujemy lambdą.
+        application.addTest("Figure Joe 1", (ActionEvent e) ->
+                FiguresJoe.figureScript1(DriverFeature.getDriverManager().getCurrentDriver())
+        );
+        //Zadanie 3.2 - Figure Joe 2
+        application.addTest("Figure Joe 2", (ActionEvent e) ->
+                FiguresJoe.figureScript2(DriverFeature.getDriverManager().getCurrentDriver())
+        );
 	}
 
 	/**
@@ -37,12 +44,17 @@ public class TestJobs2dPatterns {
 	private static void setupDrivers(Application application) {
 		Job2dDriver loggerDriver = new LoggerDriver();
 		DriverFeature.addDriver("Logger Driver", loggerDriver);
-		DriverFeature.getDriverManager().setCurrentDriver(loggerDriver);
-
-		Job2dDriver testDriver = new DrawTheCorrectPattern();
-		DriverFeature.addDriver("Buggy Simulator", testDriver);
-
-		DriverFeature.updateDriverInfo();
+        // Zadanie 3.2 - podstawowy adapter
+        Job2dDriver basicDriver = new DrawTheCorrectPattern();
+        DriverFeature.addDriver("Basic Simulator", basicDriver);
+        // Zadanie 3.3 - adaptery z różnymi typami linii
+        Job2dDriver specialLineDriver = new LineDrawerAdapter(LineFactory.getSpecialLine());
+        DriverFeature.addDriver("Special Line", specialLineDriver);
+        Job2dDriver dottedLineDriver = new LineDrawerAdapter(LineFactory.getDottedLine());
+        DriverFeature.addDriver("Dotted Line", dottedLineDriver);
+        // Ustaw domyślny driver
+        DriverFeature.getDriverManager().setCurrentDriver(basicDriver);
+        DriverFeature.updateDriverInfo();
 	}
 
 	/**
