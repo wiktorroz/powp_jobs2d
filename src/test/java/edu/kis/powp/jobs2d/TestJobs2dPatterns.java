@@ -16,6 +16,9 @@ import edu.kis.powp.jobs2d.events.SelectTestFigureOptionListener;
 import edu.kis.powp.jobs2d.features.DrawerFeature;
 import edu.kis.powp.jobs2d.features.DriverFeature;
 import edu.kis.powp.jobs2d.magicpresets.FiguresJoe;
+import edu.kis.powp.jobs2d.drivers.adapter.AbstractDriverAdapter;
+import edu.kis.powp.jobs2d.magicpresets.FiguresJane;
+
 
 public class TestJobs2dPatterns {
 	private final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -30,11 +33,17 @@ public class TestJobs2dPatterns {
         application.addTest("Figure Joe 1", (ActionEvent e) ->
                 FiguresJoe.figureScript1(DriverFeature.getDriverManager().getCurrentDriver())
         );
-        //Zadanie 3.2 - Figure Joe 2
+        //Zadanie 3.3 - Figure Joe 2
         application.addTest("Figure Joe 2", (ActionEvent e) ->
                 FiguresJoe.figureScript2(DriverFeature.getDriverManager().getCurrentDriver())
         );
-	}
+        //Zadanie 3.4 - Figure Jane
+        application.addTest("Figure Jane", (ActionEvent e) -> {
+            AbstractDriverAdapter adapter = new AbstractDriverAdapter();
+            FiguresJane.figureScript(adapter);
+        });
+
+    }
 
 	/**
 	 * Setup driver manager, and set default driver for application.
